@@ -1,0 +1,9 @@
+[2019-12-04 19:51:20] [Data Server]: Starting server
+[2019-12-04 19:51:20] [RIO Load Mon] WARNING: cannot get raw CPU load data. Giving up future attempts to read.
+[2019-12-04 19:51:20] [RIO Load Mon] WARNING: cannot parse CPU load. Giving up future attempts to read.
+[2019-12-04 19:51:20] [RIO Load Mon] WARNING: cannot get raw memory load data. Giving up future attempts to read.
+[2019-12-04 19:51:20] [RIO Load Mon] WARNING: cannot parse memory load. Giving up future attempts to read.
+[2019-12-04 19:52:34] [Data Server]: Socket Connection from /0:0:0:0:0:0:0:1:54294
+[2019-12-04 19:52:34] [Data Server]: Remote /0:0:0:0:0:0:0:1:54294 requested signal list
+[2019-12-04 19:52:35] [Data Server]: Remote /0:0:0:0:0:0:0:1:54294 requested new DAQ
+[2019-12-04 19:52:35] [Data Server]: Remote /0:0:0:0:0:0:0:1:54294 requested TX start

@@ -7,12 +7,13 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.PowerDistributionPanel;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
 import frc.lib.Calibration.CalWrangler;
 import frc.lib.DataServer.CasseroleDataServer;
 import frc.lib.DataServer.Signal;
 import frc.lib.LoadMon.CasseroleRIOLoadMonitor;
-import frc.lib.WebServer.CasseroleDriverView;
 import frc.lib.WebServer.CasseroleWebServer;
 import frc.robot.LoopTiming;
 
@@ -26,16 +27,34 @@ public class Robot extends TimedRobot {
   CasseroleRIOLoadMonitor loadMon;
   LoopTiming loopTiming;
 
+  PowerDistributionPanel pdp;
+
   Signal rioCANBusUsagePctSig;
-  Signal rioDSLogQueueLenSig;
   Signal rioBattVoltLoadSig;
   Signal rioCurrDrawLoadSig;
+  Signal testStepNum;
+
+  InstrumentedCANVenom motor1;
+  InstrumentedCANVenom motor2;
+  InstrumentedCANVenom motor3;
+  InstrumentedCANVenom motor4;
+
+
+  int testSeqStepNum = 0;
 
   @Override
   public void robotInit() {
 
     loopTiming = LoopTiming.getInstance();
     loadMon = new CasseroleRIOLoadMonitor();
+    pdp = new PowerDistributionPanel(0);
+
+
+    //Init DUT's
+    motor1 = new InstrumentedCANVenom(1, "motor1");
+    motor2 = new InstrumentedCANVenom(2, "motor2");
+    motor3 = new InstrumentedCANVenom(3, "motor3");
+    motor4 = new InstrumentedCANVenom(4, "motor4");
 
     /* Init website utilties */
     webserver = new CasseroleWebServer();
@@ -52,23 +71,27 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void robotPeriodic() {
-
-  }
-
-  @Override
-  public void autonomousInit() {
-
-  }
-
-  @Override
-  public void autonomousPeriodic() {
-
+  public void teleopInit() {
+    testSeqStepNum = 0;
   }
 
   @Override
   public void teleopPeriodic() {
     loopTiming.markLoopStart();
+
+    double sampleTimeMs = loopTiming.getLoopStartTimeSec()*1000.0;
+
+    if(testSeqStepNum == 0){
+
+    } else {
+      //Test completed, do nothing.
+    }
+
+
+
+    rioCurrDrawLoadSig.addSample(sampleTimeMs, pdp.getTotalCurrent());
+    rioBattVoltLoadSig.addSample(sampleTimeMs, pdp.getVoltage());  
+    rioCANBusUsagePctSig.addSample(sampleTimeMs, RobotController.getCANStatus().percentBusUtilization);
 
     loopTiming.markLoopEnd();
   }

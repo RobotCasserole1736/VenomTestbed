@@ -157,10 +157,10 @@ public class Robot extends TimedRobot {
         testSeqStepNum = 3; 
 
         //One time, set new PID constants for step 3 and 4 and 5.
-        motor1.setPID(5.0, 0.03, 0, 0, 0);
-        motor2.setPID(5.0, 0.03, 0, 0, 0);
-        motor3.setPID(5.0, 0.03, 0, 0, 0);
-        motor4.setPID(5.0, 0.03, 0, 0, 0);
+        motor1.setPID(4.0, 0.03, 0, 0, 0);
+        motor2.setPID(4.0, 0.03, 0, 0, 0);
+        motor3.setPID(4.0, 0.03, 0, 0, 0);
+        motor4.setPID(4.0, 0.03, 0, 0, 0);
         motor1.resetPosition();
         motor2.resetPosition();
         motor3.resetPosition();
@@ -193,7 +193,7 @@ public class Robot extends TimedRobot {
 
     } else if (testSeqStepNum == 4){
       double curTime = Timer.getFPGATimestamp();
-      double posCmd1 = 120.0*Math.sin(2*Math.PI*0.2*curTime);
+      double posCmd1 = 63.0*Math.sin(2*Math.PI*0.15*curTime);
       motor1.setCommand(CANVenom.ControlMode.PositionControl, posCmd1);
       motor2.setCommand(CANVenom.ControlMode.FollowTheLeader, 1);
       motor3.setCommand(CANVenom.ControlMode.FollowTheLeader, 1);
@@ -201,29 +201,33 @@ public class Robot extends TimedRobot {
     
       if(timeSinceStepStart > 10.0){
         testSeqStepNum = 5;
+        motor1.resetPosition();
         motor2.resetPosition();
+        motor3.resetPosition();
+        motor4.resetPosition();
+
         motor2.clearMotionProfilePoints();
         motor2.addMotionProfilePoint(0.0,0,0);
-        motor2.addMotionProfilePoint(0.1,0,0.25);
-        motor2.addMotionProfilePoint(0.5,0,0.5);
-        motor2.addMotionProfilePoint(1.0,0,3);
-        motor2.addMotionProfilePoint(1.5,0,6);
-        motor2.addMotionProfilePoint(1.6,0,8);
-        motor2.addMotionProfilePoint(1.7,0,10);
-        motor2.addMotionProfilePoint(1.8,0,15);
-        motor2.addMotionProfilePoint(2.0,0,10);
-        motor2.addMotionProfilePoint(4.0,0,-10);
-        motor2.addMotionProfilePoint(5.0,0,-18);
-        motor2.addMotionProfilePoint(6.0,0,-2);
-        motor2.addMotionProfilePoint(7.0,0,0);
-        motor2.completeMotionProfilePath(8.0,0);
+        motor2.addMotionProfilePoint(0100,0,0.1);
+        motor2.addMotionProfilePoint(0500,0,0.5);
+        motor2.addMotionProfilePoint(1000,0,30);
+        motor2.addMotionProfilePoint(1500,0,60);
+        motor2.addMotionProfilePoint(1600,0,80);
+        motor2.addMotionProfilePoint(1700,0,100);
+        motor2.addMotionProfilePoint(1800,0,150);
+        motor2.addMotionProfilePoint(2000,0,100);
+        motor2.addMotionProfilePoint(4000,0,-100);
+        motor2.addMotionProfilePoint(5000,0,-180);
+        motor2.addMotionProfilePoint(6000,0,-20);
+        motor2.addMotionProfilePoint(7000,0,0);
+        motor2.completeMotionProfilePath(8000,0);
+        motor2.setCommand(CANVenom.ControlMode.MotionProfile , 0);
+
       }
 
     } else if (testSeqStepNum == 5){
-      double curTime = Timer.getFPGATimestamp();
-      double posCmd1 = 120.0*Math.sin(2*Math.PI*0.2*curTime);
+
       motor1.setCommand(CANVenom.ControlMode.FollowTheLeader, 2);
-      motor2.setCommand(CANVenom.ControlMode.MotionProfile , 0);
       motor3.setCommand(CANVenom.ControlMode.FollowTheLeader, 2);
       motor4.setCommand(CANVenom.ControlMode.FollowTheLeader, 2);
     

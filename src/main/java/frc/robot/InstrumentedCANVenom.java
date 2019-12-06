@@ -7,9 +7,9 @@ import frc.lib.DataServer.Signal;
 
 public class InstrumentedCANVenom extends CANVenom {
 
-    Signal motorBusVoltage;
-    Signal motorOutputCurrent;
-    Signal motorOutputVoltage;
+    Signal controllerBusVoltage;
+    Signal controllerOutputCurrent;
+    Signal controllerOutputVoltage;
     Signal motorPosition;
     Signal motorSpeed;
     Signal motorTemperature;
@@ -22,11 +22,11 @@ public class InstrumentedCANVenom extends CANVenom {
     public InstrumentedCANVenom(int motorID, String motorName){
         super(motorID);
 
-        motorBusVoltage = new Signal(motorName+"_BusVoltage", "V");
-        motorOutputCurrent = new Signal(motorName+"_OutputCurrent", "A");
-        motorOutputVoltage = new Signal(motorName+"_OutputVoltage", "V");
+        controllerBusVoltage = new Signal(motorName+"_BusVoltage", "V");
+        controllerOutputCurrent = new Signal(motorName+"_OutputCurrent", "A");
+        controllerOutputVoltage = new Signal(motorName+"_OutputVoltage", "V");
         motorPosition = new Signal(motorName+"_Position", "rev");
-        motorSpeed = new Signal(motorName+"_BusVoltage", "RPM");
+        motorSpeed = new Signal(motorName+"_Speed", "RPM");
         motorTemperature = new Signal(motorName+"_Temperature", "C");
         motorCommandSpeed = new Signal(motorName+"_SpdCommand", "RPM");
         motorCommandPos = new Signal(motorName+"_PosCommand", "rev");
@@ -34,38 +34,38 @@ public class InstrumentedCANVenom extends CANVenom {
     }
 
     public void logData(){
-        double sample_time = lt.getLoopStartTimeSec();
-        motorBusVoltage.addSample(sample_time, super.getBusVoltage());
-        motorOutputCurrent.addSample(sample_time, super.getOutputCurrent());
-        motorOutputVoltage.addSample(sample_time, super.getOutputVoltage());
-        motorPosition.addSample(sample_time, super.getPosition());
-        motorSpeed.addSample(sample_time, super.getSpeed());
-        motorTemperature.addSample(sample_time, super.getTemperature());
+        double sampleTimeMs = lt.getLoopStartTimeSec()*1000.0;
+        controllerBusVoltage.addSample(sampleTimeMs, super.getBusVoltage());
+        controllerOutputCurrent.addSample(sampleTimeMs, super.getOutputCurrent());
+        controllerOutputVoltage.addSample(sampleTimeMs, super.getOutputVoltage());
+        motorPosition.addSample(sampleTimeMs, super.getPosition());
+        motorSpeed.addSample(sampleTimeMs, super.getSpeed());
+        motorTemperature.addSample(sampleTimeMs, super.getTemperature());
     }
 
     @Override
     public void setCommand(CANVenom.ControlMode mode, double command){
-        double sample_time = lt.getLoopStartTimeSec();
+        double sampleTimeMs = lt.getLoopStartTimeSec()*1000.0;
 
         super.setCommand(mode, command);
 
         if(mode == CANVenom.ControlMode.PositionControl){
-            motorCommandPos.addSample(sample_time, command);
+            motorCommandPos.addSample(sampleTimeMs, command);
         } else if (mode == ControlMode.SpeedControl){
-            motorCommandSpeed.addSample(sample_time, command);
+            motorCommandSpeed.addSample(sampleTimeMs, command);
         }
     }
 
     @Override
     public void setCommand(CANVenom.ControlMode mode, double command, double kF, double b){
-        double sample_time = lt.getLoopStartTimeSec();
+        double sampleTimeMs = lt.getLoopStartTimeSec()*1000.0;
 
         super.setCommand(mode, command, kF, b);
         
         if(mode == CANVenom.ControlMode.PositionControl){
-            motorCommandPos.addSample(sample_time, command);
+            motorCommandPos.addSample(sampleTimeMs, command);
         } else if (mode == ControlMode.SpeedControl){
-            motorCommandSpeed.addSample(sample_time, command);
+            motorCommandSpeed.addSample(sampleTimeMs, command);
         }
     }
 

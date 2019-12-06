@@ -104,9 +104,9 @@ public class Robot extends TimedRobot {
       double cmd4 = Math.sin(2*Math.PI*0.25*curTime + 3*Math.PI/6);
 
       motor1.set(cmd1);
-      //motor2.set(cmd2);
-      //motor3.set(cmd3);
-      //motor4.set(cmd4);
+      motor2.set(cmd2);
+      motor3.set(cmd3);
+      motor4.set(cmd4);
 
       //After ten seconds of this, move on.
       if(timeSinceStepStart > 10.0){
@@ -122,19 +122,19 @@ public class Robot extends TimedRobot {
       double voltCmd4 = 11.0*Math.sin(2*Math.PI*0.3*curTime + 8*Math.PI/6);
     
       motor1.setVoltage(voltCmd1);
-      //motor2.setVoltage(voltCmd2);
-      //motor3.setVoltage(voltCmd3);
-      //motor4.setVoltage(voltCmd4);
+      motor2.setVoltage(voltCmd2);
+      motor3.setVoltage(voltCmd3);
+      motor4.setVoltage(voltCmd4);
     
       //After ten seconds of this, move on.
       if(timeSinceStepStart > 10.0){
         testSeqStepNum = 2;
 
         //One time, set new PID constants for step 2.
-        motor1.setPID(1.5, 0, 0, 0.184, 0);
-        //motor2.setPID(1.5, 0, 0, 0.184, 0);
-        //motor3.setPID(1.5, 0, 0, 0.184, 0);
-        //motor4.setPID(1.5, 0, 0, 0.184, 0);
+        motor1.setPID(0.75, 0, 0, 0.074, 0);
+        motor2.setPID(0.75, 0, 0, 0.074, 0);
+        motor3.setPID(0.75, 0, 0, 0.074, 0);
+        motor4.setPID(0.75, 0, 0, 0.074, 0);
       }
 
 
@@ -147,19 +147,19 @@ public class Robot extends TimedRobot {
       double speedCmd4 = 4000.0*Math.sin(2*Math.PI*0.3*curTime + 6*Math.PI/6);
     
       motor1.setCommand(CANVenom.ControlMode.SpeedControl, speedCmd1);
-      //motor2.setCommand(CANVenom.ControlMode.SpeedControl, speedCmd2);
-      //motor3.setCommand(CANVenom.ControlMode.SpeedControl, speedCmd3);
-      //motor4.setCommand(CANVenom.ControlMode.SpeedControl, speedCmd4);
+      motor2.setCommand(CANVenom.ControlMode.SpeedControl, speedCmd2);
+      motor3.setCommand(CANVenom.ControlMode.SpeedControl, speedCmd3);
+      motor4.setCommand(CANVenom.ControlMode.SpeedControl, speedCmd4);
     
       //After ten seconds of this, move on.
       if(timeSinceStepStart > 10.0){
         testSeqStepNum = 3;
 
         //One time, set new PID constants for step 3.
-        motor1.setPID(1.5, 0, 0, 0.184, 0);
-        //motor2.setPID(1.5, 0, 0, 0.184, 0);
-        //motor3.setPID(1.5, 0, 0, 0.184, 0);
-        //motor4.setPID(1.5, 0, 0, 0.184, 0);
+        motor1.setPID(0.75, 0, 0, 0.74, 0);
+        motor2.setPID(0.75, 0, 0, 0.74, 0);
+        motor3.setPID(0.75, 0, 0, 0.74, 0);
+        motor4.setPID(0.75, 0, 0, 0.74, 0);
       }
       
       
@@ -172,9 +172,9 @@ public class Robot extends TimedRobot {
       double posCmd4 = 16.0*Math.sin(2*Math.PI*0.1*curTime + 3*Math.PI/6);
     
       motor1.setCommand(CANVenom.ControlMode.PositionControl, posCmd1);
-      //motor2.setCommand(CANVenom.ControlMode.PositionControl, posCmd2);
-      //motor3.setCommand(CANVenom.ControlMode.PositionControl, posCmd3);
-      //motor4.setCommand(CANVenom.ControlMode.PositionControl, posCmd4);
+      motor2.setCommand(CANVenom.ControlMode.PositionControl, posCmd2);
+      motor3.setCommand(CANVenom.ControlMode.PositionControl, posCmd3);
+      motor4.setCommand(CANVenom.ControlMode.PositionControl, posCmd4);
     
       //After ten seconds of this, move on.
       if(timeSinceStepStart > 10.0){
@@ -197,6 +197,7 @@ public class Robot extends TimedRobot {
     rioCurrDrawLoadSig.addSample(sampleTimeMs, pdp.getTotalCurrent());
     rioBattVoltLoadSig.addSample(sampleTimeMs, pdp.getVoltage());  
     rioCANBusUsagePctSig.addSample(sampleTimeMs, RobotController.getCANStatus().percentBusUtilization);
+    testStepNum.addSample(sampleTimeMs, testSeqStepNum);
 
     loopTiming.markLoopEnd();
   }

@@ -28,8 +28,8 @@ public class InstrumentedCANVenom extends CANVenom {
         motorPosition = new Signal(motorName+"_Position", "rev");
         motorSpeed = new Signal(motorName+"_BusVoltage", "RPM");
         motorTemperature = new Signal(motorName+"_Temperature", "C");
-        motorCommandSpeed = new Signal(motorName+"_Comand", "RPM");
-        motorCommandPos = new Signal(motorName+"_Comand", "rev");
+        motorCommandSpeed = new Signal(motorName+"_SpdCommand", "RPM");
+        motorCommandPos = new Signal(motorName+"_PosCommand", "rev");
         lt = LoopTiming.getInstance();
     }
 

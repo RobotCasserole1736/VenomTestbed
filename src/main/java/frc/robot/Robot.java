@@ -69,6 +69,7 @@ public class Robot extends TimedRobot {
     rioCurrDrawLoadSig = new Signal("Battery Current Draw", "A");
     rioBattVoltLoadSig = new Signal("Battery Voltage", "V");
     rioCANBusUsagePctSig = new Signal("Robot CAN Bus Utilization", "pct");
+    testStepNum = new Signal("Test Step Num", "step");
     /* Fire up webserver & telemetry dataserver */
     webserver.startServer();
     dataServer.startServer();
@@ -131,10 +132,10 @@ public class Robot extends TimedRobot {
         testSeqStepNum = 2;
 
         //One time, set new PID constants for step 2.
-        motor1.setPID(0.75, 0, 0, 0.074, 0);
-        motor2.setPID(0.75, 0, 0, 0.074, 0);
-        motor3.setPID(0.75, 0, 0, 0.074, 0);
-        motor4.setPID(0.75, 0, 0, 0.074, 0);
+        motor1.setPID(0.4, 0.04, 0, 0.194, 0);
+        motor2.setPID(0.4, 0.04, 0, 0.194, 0);
+        motor3.setPID(0.4, 0.04, 0, 0.194, 0);
+        motor4.setPID(0.4, 0.04, 0, 0.194, 0);
       }
 
 
@@ -153,23 +154,27 @@ public class Robot extends TimedRobot {
     
       //After ten seconds of this, move on.
       if(timeSinceStepStart > 10.0){
-        testSeqStepNum = 3;
+        testSeqStepNum = 3; 
 
-        //One time, set new PID constants for step 3.
-        motor1.setPID(0.75, 0, 0, 0.74, 0);
-        motor2.setPID(0.75, 0, 0, 0.74, 0);
-        motor3.setPID(0.75, 0, 0, 0.74, 0);
-        motor4.setPID(0.75, 0, 0, 0.74, 0);
+        //One time, set new PID constants for step 3 and 4 and 5.
+        motor1.setPID(5.0, 0.03, 0, 0, 0);
+        motor2.setPID(5.0, 0.03, 0, 0, 0);
+        motor3.setPID(5.0, 0.03, 0, 0, 0);
+        motor4.setPID(5.0, 0.03, 0, 0, 0);
+        motor1.resetPosition();
+        motor2.resetPosition();
+        motor3.resetPosition();
+        motor4.resetPosition();
       }
       
       
     } else if (testSeqStepNum == 3){
       //position Closed Loop Commands
       double curTime = Timer.getFPGATimestamp();
-      double posCmd1 = 10.0*Math.sin(2*Math.PI*0.1*curTime + 0*Math.PI/6);
-      double posCmd2 = 12.0*Math.sin(2*Math.PI*0.1*curTime + 1*Math.PI/6);
-      double posCmd3 = 14.0*Math.sin(2*Math.PI*0.1*curTime + 2*Math.PI/6);
-      double posCmd4 = 16.0*Math.sin(2*Math.PI*0.1*curTime + 3*Math.PI/6);
+      double posCmd1 = 50.0*Math.sin(2*Math.PI*0.1*curTime + 0*Math.PI/6);
+      double posCmd2 = 60.0*Math.sin(2*Math.PI*0.1*curTime + 1*Math.PI/6);
+      double posCmd3 = 80.0*Math.sin(2*Math.PI*0.1*curTime + 2*Math.PI/6);
+      double posCmd4 = 100.0*Math.sin(2*Math.PI*0.1*curTime + 3*Math.PI/6);
     
       motor1.setCommand(CANVenom.ControlMode.PositionControl, posCmd1);
       motor2.setCommand(CANVenom.ControlMode.PositionControl, posCmd2);
@@ -179,9 +184,64 @@ public class Robot extends TimedRobot {
       //After ten seconds of this, move on.
       if(timeSinceStepStart > 10.0){
         testSeqStepNum = 4;
+        motor1.resetPosition();
+        motor2.resetPosition();
+        motor3.resetPosition();
+        motor4.resetPosition();
       }
+
+
+    } else if (testSeqStepNum == 4){
+      double curTime = Timer.getFPGATimestamp();
+      double posCmd1 = 120.0*Math.sin(2*Math.PI*0.2*curTime);
+      motor1.setCommand(CANVenom.ControlMode.PositionControl, posCmd1);
+      motor2.setCommand(CANVenom.ControlMode.FollowTheLeader, 1);
+      motor3.setCommand(CANVenom.ControlMode.FollowTheLeader, 1);
+      motor4.setCommand(CANVenom.ControlMode.FollowTheLeader, 1);
+    
+      if(timeSinceStepStart > 10.0){
+        testSeqStepNum = 5;
+        motor2.resetPosition();
+        motor2.clearMotionProfilePoints();
+        motor2.addMotionProfilePoint(0.0,0,0);
+        motor2.addMotionProfilePoint(0.1,0,0.25);
+        motor2.addMotionProfilePoint(0.5,0,0.5);
+        motor2.addMotionProfilePoint(1.0,0,3);
+        motor2.addMotionProfilePoint(1.5,0,6);
+        motor2.addMotionProfilePoint(1.6,0,8);
+        motor2.addMotionProfilePoint(1.7,0,10);
+        motor2.addMotionProfilePoint(1.8,0,15);
+        motor2.addMotionProfilePoint(2.0,0,10);
+        motor2.addMotionProfilePoint(4.0,0,-10);
+        motor2.addMotionProfilePoint(5.0,0,-18);
+        motor2.addMotionProfilePoint(6.0,0,-2);
+        motor2.addMotionProfilePoint(7.0,0,0);
+        motor2.completeMotionProfilePath(8.0,0);
+      }
+
+    } else if (testSeqStepNum == 5){
+      double curTime = Timer.getFPGATimestamp();
+      double posCmd1 = 120.0*Math.sin(2*Math.PI*0.2*curTime);
+      motor1.setCommand(CANVenom.ControlMode.FollowTheLeader, 2);
+      motor2.setCommand(CANVenom.ControlMode.MotionProfile , 0);
+      motor3.setCommand(CANVenom.ControlMode.FollowTheLeader, 2);
+      motor4.setCommand(CANVenom.ControlMode.FollowTheLeader, 2);
+    
+      if(timeSinceStepStart > 10.0){
+        testSeqStepNum = 6;
+        motor2.resetPosition();
+        motor2.clearMotionProfilePoints();
+      }
+
+
+
     } else {
       //Test completed, do nothing.
+      motor1.set(0);
+      motor2.set(0);
+      motor3.set(0);
+      motor4.set(0);
+
     }
 
     //move to next test step
@@ -191,6 +251,9 @@ public class Robot extends TimedRobot {
     }
 
     motor1.logData();
+    motor2.logData();
+    motor3.logData();
+    motor4.logData();
     
     //Log RIO & testboard stats
     double sampleTimeMs = loopTiming.getLoopStartTimeSec()*1000.0;
